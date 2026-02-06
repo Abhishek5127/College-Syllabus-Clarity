@@ -1,7 +1,7 @@
 import Hero from "@/app/components/hero";
 import SyllabusCanvas from "@/app/components/SyllabusCanvas";
 import Link from "next/link";
-import { departments } from "@/app/data/syllabus-data";
+import { departmentSummaries } from "@/app/data/departments";
 export default function Home() {
   return (
     <div className="text-[color:var(--foreground)]">
@@ -30,7 +30,7 @@ export default function Home() {
             </Link>
           </div>
           <div className="mt-8 grid gap-4 md:grid-cols-2">
-            {departments.map((dept) => (
+            {departmentSummaries.map((dept) => (
               <div
                 key={dept.id}
                 className="rounded-2xl border border-black/10 bg-gray-600 p-5"
@@ -42,7 +42,7 @@ export default function Home() {
                   {dept.tagline}
                 </p>
                 <p className="mt-3 text-xs text-[color:var(--muted)]">
-                  {dept.semesters.length} semesters available
+                  {dept.semesterCount} semesters available
                 </p>
               </div>
             ))}

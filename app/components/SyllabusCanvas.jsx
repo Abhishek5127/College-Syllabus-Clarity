@@ -1,6 +1,6 @@
 import React from 'react'
 import Link from 'next/link'
-import { departments } from '@/app/data/syllabus-data'
+import { departmentSummaries } from "@/app/data/departments"
 
 const SyllabusCanvas = () => {
   const highlights = [
@@ -66,7 +66,7 @@ const SyllabusCanvas = () => {
             Departments Live
           </p>
           <div className="mt-6 space-y-4">
-            {departments.map((dept) => (
+            {departmentSummaries.map((dept) => (
               <div
                 key={dept.id}
                 className="rounded-2xl bg-gray-600 px-4 py-4 backdrop-blur"
@@ -78,7 +78,7 @@ const SyllabusCanvas = () => {
                   {dept.tagline}
                 </p>
                 <p className="mt-2 text-xs text-[color:var(--muted)]">
-                  {dept.semesters.length} semesters mapped
+                  {dept.semesterCount} semesters mapped
                 </p>
               </div>
             ))}

@@ -1,20 +1,65 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
-import { departments } from "@/app/data/syllabus-data";
+import { departmentSummaries, getDepartment } from "@/app/data/departments";
 
 export default function Page() {
   const [departmentId, setDepartmentId] = useState("");
   const [semesterId, setSemesterId] = useState("");
   const [subjectName, setSubjectName] = useState("");
+  const [departmentData, setDepartmentData] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const departmentCache = useRef({});
 
-  const department = useMemo(
-    () => departments.find((item) => item.id === departmentId),
+  const departmentSummary = useMemo(
+    () => departmentSummaries.find((item) => item.id === departmentId),
     [departmentId]
   );
 
-  const semesters = department?.semesters ?? [];
+  useEffect(() => {
+    let isActive = true;
+    if (!departmentId) {
+      setDepartmentData(null);
+      setIsLoading(false);
+      return () => {
+        isActive = false;
+      };
+    }
+
+    const cached = departmentCache.current[departmentId];
+    if (cached) {
+      setDepartmentData(cached);
+      setIsLoading(false);
+      return () => {
+        isActive = false;
+      };
+    }
+
+    setDepartmentData(null);
+    setIsLoading(true);
+
+    getDepartment(departmentId)
+      .then((data) => {
+        if (!isActive) return;
+        if (data) {
+          departmentCache.current[departmentId] = data;
+        }
+        setDepartmentData(data);
+        setIsLoading(false);
+      })
+      .catch(() => {
+        if (!isActive) return;
+        setDepartmentData(null);
+        setIsLoading(false);
+      });
+
+    return () => {
+      isActive = false;
+    };
+  }, [departmentId]);
+
+  const semesters = departmentData?.semesters ?? [];
   const selectedSemester = semesters.find((item) => item.id === semesterId);
   const subjectDetails =
     selectedSemester?.subjectDetails?.[subjectName] ?? null;
@@ -64,7 +109,7 @@ export default function Page() {
                 }}
               >
                 <option value="">Select Department...</option>
-                {departments.map((dept) => (
+                {departmentSummaries.map((dept) => (
                   <option key={dept.id} value={dept.id}>
                     {dept.name}
                   </option>
@@ -82,10 +127,14 @@ export default function Page() {
                   setSemesterId(event.target.value);
                   setSubjectName("");
                 }}
-                disabled={!departmentId}
+                disabled={!departmentId || isLoading}
               >
                 <option value="">
-                  {departmentId ? "Select Semester..." : "Select department first"}
+                  {!departmentId
+                    ? "Select department first"
+                    : isLoading
+                      ? "Loading semesters..."
+                      : "Select Semester..."}
                 </option>
                 {semesters.map((semester) => (
                   <option key={semester.id} value={semester.id}>
@@ -122,7 +171,7 @@ export default function Page() {
             <div className="space-y-6">
               <div>
                 <p className="text-xs font-semibold uppercase tracking-[0.3em] text-[color:var(--muted)]">
-                  {department?.name} • {selectedSemester.label}
+                  {(departmentSummary?.name ?? departmentData?.name) || ""} - {selectedSemester.label}
                 </p>
                 <h2 className="mt-2 text-3xl text-[color:var(--brand)]">
                   {selectedSemester.focus}
@@ -206,3 +255,4 @@ export default function Page() {
     </div>
   );
 }
+
