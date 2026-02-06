@@ -1,26 +1,61 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #0b0c0f;
+  --foreground: #f5f2eb;
+  --brand: #7ef6c9;
+  --accent: #f4a259;
+  --muted: #b4bfc7;
+  --surface: #11151a;
+  --surface-strong: #1a2027;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-brand: var(--brand);
+  --color-accent: var(--accent);
+  --color-muted: var(--muted);
+  --color-surface: var(--surface);
+  --color-surface-strong: var(--surface-strong);
+  --font-sans: var(--font-body);
+  --font-display: var(--font-display);
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    --background: #0b0c0f;
+    --foreground: #f5f2eb;
+    --brand: #7ef6c9;
+    --accent: #f4a259;
+    --muted: #c7c0b4;
+    --surface: #11151a;
+    --surface-strong: #1a2027;
   }
 }
 
 body {
-  background: var(--background);
+  background: radial-gradient(
+      circle at top,
+      rgba(126, 246, 201, 0.12),
+      transparent 55%
+    ),
+    linear-gradient(120deg, #0b0c0f 0%, #0f1216 48%, #0b0c0f 100%);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-body), system-ui, -apple-system, sans-serif;
+}
+
+main,
+section {
+  width: 100%;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: var(--font-display), "Times New Roman", serif;
+  letter-spacing: -0.01em;
 }
