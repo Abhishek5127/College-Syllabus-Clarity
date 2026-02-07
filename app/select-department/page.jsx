@@ -63,6 +63,8 @@ export default function Page() {
   const selectedSemester = semesters.find((item) => item.id === semesterId);
   const subjectDetails =
     selectedSemester?.subjectDetails?.[subjectName] ?? null;
+  const overview = subjectDetails?.overview ?? null;
+  const textBooks = subjectDetails?.textBooks ?? [];
 
   return (
     <div className="min-h-screen">
@@ -220,6 +222,71 @@ export default function Page() {
                           {subjectDetails.title}
                         </p>
                       </div>
+                      {overview ? (
+                        <div className="rounded-2xl border border-white/10 bg-[color:var(--surface)] p-4">
+                          <p className="text-sm font-semibold text-[color:var(--brand)]">
+                            Course Overview
+                          </p>
+                          <div className="mt-3 overflow-hidden rounded-xl border border-white/10">
+                            <table className="w-full text-left text-sm text-[color:var(--foreground)]/85">
+                              <tbody>
+                                {overview.courseCredit ? (
+                                  <tr className="border-b border-white/10">
+                                    <td className="w-1/2 px-3 py-2 font-semibold text-[color:var(--brand)]/90">
+                                      Course Credit
+                                    </td>
+                                    <td className="px-3 py-2">
+                                      {overview.courseCredit}
+                                    </td>
+                                  </tr>
+                                ) : null}
+                                {overview.hoursPerWeek ? (
+                                  <tr className="border-b border-white/10">
+                                    <td className="w-1/2 px-3 py-2 font-semibold text-[color:var(--brand)]/90">
+                                      Hours per Week
+                                    </td>
+                                    <td className="px-3 py-2">
+                                      {overview.hoursPerWeek}
+                                    </td>
+                                  </tr>
+                                ) : null}
+                                {overview.totalTeachingHours ? (
+                                  <tr className="border-b border-white/10">
+                                    <td className="w-1/2 px-3 py-2 font-semibold text-[color:var(--brand)]/90">
+                                      Total Teaching Hours
+                                    </td>
+                                    <td className="px-3 py-2">
+                                      {overview.totalTeachingHours}
+                                    </td>
+                                  </tr>
+                                ) : null}
+                                {overview.teachingPedagogy ? (
+                                  <tr>
+                                    <td className="w-1/2 px-3 py-2 font-semibold text-[color:var(--brand)]/90">
+                                      Teaching Pedagogy
+                                    </td>
+                                    <td className="px-3 py-2">
+                                      {overview.teachingPedagogy}
+                                    </td>
+                                  </tr>
+                                ) : null}
+                              </tbody>
+                            </table>
+                          </div>
+                          {overview.courseOutcomes?.length ? (
+                            <div className="mt-4">
+                              <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[color:var(--muted)]">
+                                Course Outcomes
+                              </p>
+                              <ul className="mt-2 space-y-2 text-[color:var(--foreground)]/85">
+                                {overview.courseOutcomes.map((outcome) => (
+                                  <li key={outcome}>{outcome}</li>
+                                ))}
+                              </ul>
+                            </div>
+                          ) : null}
+                        </div>
+                      ) : null}
                       <div className="space-y-4">
                         {subjectDetails.units.map((unit) => (
                           <div
@@ -237,6 +304,18 @@ export default function Page() {
                           </div>
                         ))}
                       </div>
+                      {textBooks.length ? (
+                        <div className="rounded-2xl border border-white/10 bg-[color:var(--surface)] p-4">
+                          <p className="text-sm font-semibold text-[color:var(--brand)]">
+                            Text Books
+                          </p>
+                          <ul className="mt-2 space-y-2 text-[color:var(--foreground)]/85">
+                            {textBooks.map((book) => (
+                              <li key={book}>{book}</li>
+                            ))}
+                          </ul>
+                        </div>
+                      ) : null}
                     </div>
                   )}
               </div>
